@@ -15,7 +15,7 @@ public class UserDataAccess{
             string query = "Select * from user";
             MySqlCommand command = new MySqlCommand(query,con);
             MySqlDataReader reader = command.ExecuteReader();
-            if(reader.Read()){
+            while(reader.Read()){
 
                 int userid = int.Parse(reader["userid"].ToString());
                 string username = reader["username"].ToString();
@@ -59,5 +59,54 @@ public class UserDataAccess{
         con.Close();
        }
        return user;
+    }
+
+    public static void InsertUser(Users user){
+        MySqlConnection con = new MySqlConnection(constring);
+
+        try{
+            con.Open();
+            string query = $"Insert into user(username,course) values('{user.username}','{user.course}')";
+            MySqlCommand command = new MySqlCommand(query,con);
+            command.ExecuteNonQuery();
+        }
+        catch(Exception e){
+            Console.WriteLine(e.Message);
+        }
+        finally{
+            con.Close();
+        }
+    }
+
+    public static void DeleteById(int id){
+        MySqlConnection con = new MySqlConnection(constring);
+        try{
+            con.Open();
+            string query = "Delete from user where userid = "+id;
+            MySqlCommand command = new MySqlCommand(query,con);
+            command.ExecuteNonQuery();
+        }
+        catch(Exception e){
+            Console.WriteLine(e.Message);
+        }
+        finally{
+            con.Close();
+        }
+    }
+
+    public static void UpdateById(Users user){
+        MySqlConnection con = new MySqlConnection(constring);
+        try{
+            con.Open();
+            string query = $"Update user username='{user.username}',course= '{user.course}' where userid = '{user.userid}'";
+            MySqlCommand command = new MySqlCommand(query,con);
+            command.ExecuteNonQuery();
+        }
+        catch(Exception e){
+            Console.WriteLine(e.Message);
+        }
+        finally{
+            con.Close();
+        }
     }
 }
